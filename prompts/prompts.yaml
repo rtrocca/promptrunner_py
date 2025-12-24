@@ -1,0 +1,138 @@
+---
+name: intent-detection
+version: "1.0"
+description: Intent detection and response generation system
+
+model: gpt-4o-mini
+  
+parameters:
+    max-tokens: 1000
+    temperature: 0.1
+    output-type: json-schema
+    json-schema: |-
+        {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "title": "Expected LLM Response Schema for Intent Detection",
+            "description": "This schema defines the json structure we expect to receive from an LLM when they respond to a request for intent detection.",
+            "type": "object",
+            "properties": {
+                "intent_type": {
+                    "description": "The type of intent detected by the LLM. This should either be 'conversation', or any of the types defined in the system prompt passed to the LLM",
+                    "type": "string",
+                    "maxLength": 200,
+                    "pattern": "^[a-zA-Z0-9-_]+(\\.[a-zA-Z0-9-_]+)*$"
+                },
+                "parameters": {
+                    "description": "A dictionary of parameters that are used by the detected intent. The keys are the parameter names, and the values are the parameter values.",
+                    "type": "object",
+                    "additionalProperties": {
+                        "type": "string",
+                        "maxLength": 200
+                    }
+                },
+                "message": {
+                    "description": "The message returned by the LLM.",
+                    "maxLength": 2000,
+                    "type": "string"
+                }
+            },
+            "required": [
+                "intent_type",
+                "message"
+            ],
+            "additionalProperties": false
+        }
+
+messages:
+ - role: system
+   content: |-
+     You are an intent detection and response generation system. Your task is to analyze user inputs and determine their intent based on predefined categories. If the input does not match any specific intent, classify it as 'conversation'. Always respond in the specified JSON format.
+
+     Predefined intents:
+     - weather.get_forecast: Retrieve weather forecast information.
+     - music.play_song: Play a specific song or playlist.
+     - news.get_headlines: Provide the latest news headlines.
+     - calendar.schedule_event: Schedule an event in the user's calendar.
+
+     When responding, ensure your output adheres strictly to the provided JSON schema. Include relevant parameters for each intent when applicable. If the input is conversational, set the intent_type to 'conversation' and provide a suitable message.
+ 
+ - role: assistant
+   content: What do you want to do?
+ 
+ - role: user
+   content: "{{user_input}}"
+---
+name: simple-chat
+version: "1.0"
+description: Simple conversational chat bot
+
+model: gpt-3.5-turbo
+
+parameters:
+    max-tokens: 500
+    temperature: 0.7
+    output-type: text
+
+messages:
+ - role: system
+   content: |-
+     You are a helpful and friendly assistant. Respond to the user in a conversational and engaging manner.
+     Keep your responses concise but informative.
+ 
+ - role: user
+   content: "{{user_message}}"
+---
+name: code-reviewer
+version: "1.0"
+description: Code review and suggestions
+
+model: gpt-4o-mini
+
+parameters:
+    max-tokens: 800
+    temperature: 0.3
+    output-type: json
+
+messages:
+ - role: system
+   content: |-
+     You are an expert code reviewer. Analyze the provided code and return a JSON response with your findings.
+     Include suggestions for improvements, potential bugs, and best practices.
+     
+     Return JSON in this format:
+     {
+       "overall_score": 1-10,
+       "issues": ["issue1", "issue2"],
+       "suggestions": ["suggestion1", "suggestion2"],
+       "positive_aspects": ["aspect1", "aspect2"]
+     }
+ 
+ - role: user
+   content: |-
+     Please review this {{language}} code:
+     
+     ```{{language}}
+     {{code}}
+     ```
+---
+name: basic-test
+version: "1.0"
+description: Test p
+
+model: gpt-4.1-mini
+  
+parameters:
+    max-tokens: 500
+    temperature: 0.7
+    output-type: text
+
+messages:
+ - role: system
+   content: |-
+    You are a helpful AI assistant called {{assistant_name}}.     
+    Respond to user questions clearly and concisely. Your users are AI scientists and developers seeking technical information.
+    Use technical terms appropriately. Greet the user specifying ur name in the answer. 
+    Use Markdown formatting where appropriate to highlight code snippets and important information.
+
+ - role: user
+   content: "{{user_question}}"

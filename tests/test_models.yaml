@@ -1,0 +1,4 @@
+- id: gpt-4-model
+  model-type: OpenAI
+  model-name: gpt-4
+  model-version: "2023-05-15"

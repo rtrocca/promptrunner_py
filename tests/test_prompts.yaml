@@ -1,0 +1,12 @@
+- name: test_prompt
+  version: "1.0"
+  model: gpt-4-model
+  parameters:
+    max-tokens: 100
+    temperature: 0.7
+    output-type: text
+  messages:
+    - role: system
+      content: "You are a helper."
+    - role: user
+      content: "Hello {{name}}"
