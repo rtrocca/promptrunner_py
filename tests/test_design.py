@@ -1,10 +1,10 @@
 import unittest
 import unittest.mock
-from src.promptrunner.models import Prompt, ModelDefinition, Result, ResultType, OutputType, Role
-from src.promptrunner.loaders.yaml_prompt_loader import YAMLPromptLoader
-from src.promptrunner.loaders.yaml_model_configuration import YAMLModelConfiguration
-from src.promptrunner.runner import PromptRunner
-from src.promptrunner.interfaces import PromptLoader, ModelConfiguration
+from promptrunner.models import Prompt, ModelDefinition, Result, ResultType, OutputType, Role
+from promptrunner.loaders.yaml_prompt_loader import YAMLPromptLoader
+from promptrunner.loaders.yaml_model_configuration import YAMLModelConfiguration
+from promptrunner.runner import PromptRunner
+from promptrunner.interfaces import PromptLoader, ModelConfiguration
 
 class TestPromptRunnerDesign(unittest.TestCase):
     
@@ -66,7 +66,7 @@ class TestPromptRunnerDesign(unittest.TestCase):
         with self.assertRaises(ValueError):
             config.get_model("non_existent_model")
 
-    @unittest.mock.patch('src.promptrunner.drivers.openai_driver.OpenAI')
+    @unittest.mock.patch('promptrunner.drivers.openai_driver.OpenAI')
     def test_runner_structure(self, mock_openai):
         """Test PromptRunner initialization and method signatures."""
         # We need valid files for initialization now because loaders load in __init__
@@ -76,7 +76,7 @@ class TestPromptRunnerDesign(unittest.TestCase):
         
         self.assertIsInstance(runner, PromptRunner)
 
-    @unittest.mock.patch('src.promptrunner.drivers.openai_driver.OpenAI')
+    @unittest.mock.patch('promptrunner.drivers.openai_driver.OpenAI')
     def test_runner_execution(self, mock_openai):
         """Test PromptRunner execution with mocked OpenAI."""
         # Setup mock

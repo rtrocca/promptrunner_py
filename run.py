@@ -5,10 +5,10 @@ from dotenv import load_dotenv
 from rich.console import Console
 from rich.markdown import Markdown
 from rich.json import JSON
-from src.promptrunner.loaders.yaml_prompt_loader import YAMLPromptLoader
-from src.promptrunner.loaders.yaml_model_configuration import YAMLModelConfiguration
-from src.promptrunner.runner import PromptRunner
-from src.promptrunner.models.result_type import ResultType
+from promptrunner.loaders.yaml_prompt_loader import YAMLPromptLoader
+from promptrunner.loaders.yaml_model_configuration import YAMLModelConfiguration
+from promptrunner.runner import PromptRunner
+from promptrunner.models.result_type import ResultType
 
 def main():
     load_dotenv()
