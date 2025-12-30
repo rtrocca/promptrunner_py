@@ -1,0 +1,27 @@
+[tool.poetry]
+name = "promptrunner-py"
+version = "0.1.0"
+description = ""
+authors = ["Riccardo <rtrocca@gmail.com>"]
+readme = "README.md"
+packages = [{include = "promptrunner"}]
+
+[tool.poetry.dependencies]
+python = "^3.12"
+openai = "^2.14.0"
+pyyaml = "^6.0.3"
+pydantic = "^2.12.5"
+pybars3 = "^0.9.7"
+python-dotenv = "^1.2.1"
+rich = "^14.2.0"
+
+
+[tool.poetry.group.dev.dependencies]
+ipython = "^9.8.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+promptrunner = "promptrunner.cli:main"

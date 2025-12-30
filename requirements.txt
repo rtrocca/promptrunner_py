@@ -1,6 +1,0 @@
-openai
-PyYAML
-pydantic
-python-dotenv
-pybars3
-rich
