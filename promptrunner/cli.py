@@ -17,6 +17,7 @@ def main():
     parser = argparse.ArgumentParser(description="Run a prompt using PromptRunner.")
     parser.add_argument("prompt_name", help="The name of the prompt to run")
     parser.add_argument("params", help="JSON string of parameters")
+    parser.add_argument("--overrides", help="JSON string of overrides (e.g. '{\"model\": \"gpt-4\", \"parameters\": {\"temperature\": 0.5}}')")
     parser.add_argument("--prompts-file", default="prompts.yaml", help="Path to prompts YAML file")
     parser.add_argument("--models-file", default="models.yaml", help="Path to models YAML file")
     parser.add_argument("--md", action="store_true", help="Format output as Markdown")
@@ -29,12 +30,20 @@ def main():
         print("Error: params must be a valid JSON string")
         return
 
+    overrides = None
+    if args.overrides:
+        try:
+            overrides = json.loads(args.overrides)
+        except json.JSONDecodeError:
+            print("Error: overrides must be a valid JSON string")
+            return
+
     loader = YAMLPromptLoader(args.prompts_file)
     config = YAMLModelConfiguration(args.models_file)
     runner = PromptRunner(loader, config)
     
     try:
-        result = runner.run(args.prompt_name, params)
+        result = runner.run(args.prompt_name, params, overrides=overrides)
         console.print(f"[bold blue]Result Type:[/bold blue] {result.type.value}")
         
         if result.type == ResultType.TEXT:

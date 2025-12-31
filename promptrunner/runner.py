@@ -1,4 +1,4 @@
-from typing import Dict, Any
+from typing import Dict, Any, Optional
 from pybars import Compiler
 from .interfaces import PromptLoader, ModelConfiguration
 from .models.result import Result
@@ -16,12 +16,23 @@ class PromptRunner:
             ModelType.OPENAI: OpenAIDriver()
         }
 
-    def run(self, prompt_name: str, variables: Dict[str, Any]) -> Result:
+    def run(self, prompt_name: str, variables: Dict[str, Any], overrides: Optional[Dict[str, Any]] = None) -> Result:
         """
         Runs the specified prompt with the given variables.
         """
         # 1. Get prompt from loader
-        prompt = self.prompt_loader.get_prompt(prompt_name)
+        original_prompt = self.prompt_loader.get_prompt(prompt_name)
+        prompt = original_prompt.model_copy(deep=True)
+
+        # Apply overrides
+        if overrides:
+            if "model" in overrides:
+                prompt.model = overrides["model"]
+            if "parameters" in overrides:
+                if prompt.parameters is None:
+                    prompt.parameters = {}
+                prompt.parameters.update(overrides["parameters"])
+                print(prompt.parameters)
         
         # 2. Get model definition from config
         model_def = self.model_config.get_model(prompt.model)
